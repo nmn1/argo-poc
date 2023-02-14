@@ -19,7 +19,7 @@ pipeline{
             }
             steps{
                
-                   sh "docker login --username $DOCKER_CRED_USR --password $DOCKER_CRED_PSW && docker push naman01/web-app-berlin:${IMG_TAG}"
+                   sh "echo $DOCKER_CRED_PSW | docker login --username $DOCKER_CRED_USR --password-stdin  && docker push naman01/web-app-berlin:${IMG_TAG}"
                 
             }
         }
