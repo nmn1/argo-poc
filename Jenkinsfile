@@ -8,8 +8,8 @@ pipeline{
         stage("build"){
             steps{
                 cleanWs()
-                dir("/argo/my-argo-webapp"){
-                    sh "docker build -t naman01/web-app-berlin:${IMG_TAG}"
+                dir("./argo/my-argo-webapp"){
+                    sh "docker build -t naman01/web-app-berlin:${IMG_TAG} ."
                 }
             }    
         }
