@@ -1,6 +1,6 @@
 pipeline{
     agent any
-    envrionment {
+    environment {
         IMG_TAG=$BUILD_NUMBER
         DOCKER_REPO=''
     }
