@@ -1,15 +1,21 @@
 pipeline{
     agent any
     environment {
-        IMG_TAG="${BUILD_NUMBER}"
+        IMG_TAG="V-${BUILD_NUMBER}"
         DOCKER_REPO=''
     }
     stages{
-        stage(build){
+        stage("build"){
             steps{
-                dir('/argo/my-argo-webapp'){
-                    sh "ls"
-                    echo '${IMG_TAG}'
+                dir("/argo/my-argo-webapp"){
+                    sh "docker build -t naman01/web-app-berlin:${IMG_TAG}"
+                }
+            }    
+        }
+        stage("push image to dockerhub"){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]) {
+                   sh "docker push naman01/web-app-berlin:${IMG_TAG}"
                 }
             }
         }
