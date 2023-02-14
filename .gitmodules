@@ -1,0 +1,3 @@
+[submodule "argo/my-argo-webapp"]
+	path = argo/my-argo-webapp
+	url = https://github.com/nmn1/my-argo-webapp.git
