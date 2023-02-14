@@ -8,7 +8,8 @@ pipeline{
         stage(build){
             steps{
                 dir('/argo/my-argo-webapp'){
-                    echo $IMG_TAG
+                    sh "ls"
+                    echo '${IMG_TAG}'
                 }
             }
         }
