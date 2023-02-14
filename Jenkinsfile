@@ -7,7 +7,7 @@ pipeline{
     stages{
         stage("build"){
             steps{
-                cleanWS()
+                cleanWs()
                 dir("/argo/my-argo-webapp"){
                     sh "docker build -t naman01/web-app-berlin:${IMG_TAG}"
                 }
