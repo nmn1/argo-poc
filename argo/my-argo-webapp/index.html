@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <style>
+      .container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .always-visible {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/assets/draw.avif');
+        background-size: cover;
+      }
+      .reveal-on-hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/assets/berlinOrg.jpg');
+        background-size: cover;
+        clip-path: circle(0px at 0 0);
+        transition: clip-path 0.2s;
+        backdrop-blur: 10px;
+        backdrop-filter: saturate(380%) blur(10px);
+      }
+      .audio-player {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+      .audio-player button {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        cursor: pointer;
+      }
+      
+      h1 {
+        position: absolute;
+        top: 4%;
+        left: 20%;
+        transform: translate(-50%, -50%);
+        font-size: 50px;
+        color: #020001;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="always-visible"></div>
+      <div class="reveal-on-hover"></div>
+      <h1>ArgoCD By Team Berlin</h1>
+    </div>
+    <div class="audio-player">
+      <audio id="bg-audio" loop>
+        <source src="/assets/bella-ciao.mp3" type="audio/mpeg">
+      </audio>
+      <button id="audio-toggle">Play</button>
+    </div>
+    <script>
+    
+      const revealOnHover = document.querySelector('.reveal-on-hover');
+      let previousTimestamp = performance.now();
+      let currentX = 0;
+      let currentY = 0;
+
+      document.addEventListener('mousemove', (event) => {
+        const currentTimestamp = performance.now();
+        const deltaX = event.clientX - currentX;
+        const deltaY = event.clientY - currentY;
+        const deltaT = currentTimestamp - previousTimestamp;
+        const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / deltaT;
+        let size = 150;
+        if (speed > 1.5) {
+          size = 400;
+        }
+        revealOnHover.style.clipPath = `circle(${size}px at ${event.clientX}px ${event.clientY}px)`;
+        currentX = event.clientX;
+        currentY = event.clientY;
+        previousTimestamp = currentTimestamp;
+      });
+
+      const bgAudio = document.querySelector('#bg-audio');
+      const audioToggle = document.querySelector('#audio-toggle');
+
+      bgAudio.volume = 0.5;
+      bgAudio.play();
+      audioToggle.textContent = "Pause";
+
+      audioToggle.addEventListener("click", () => {
+        if (bgAudio.paused) {
+          bgAudio.play();
+          audioToggle.textContent = "Pause";
+        } else {
+          bgAudio.pause();
+          audioToggle.textContent = "Play";
+        }
+      });
+    
+</script>
+</body>
+</html>
