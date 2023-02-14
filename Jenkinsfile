@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment {
-        IMG_TAG=$BUILD_NUMBER
+        IMG_TAG=${BUILD_NUMBER}
         DOCKER_REPO=''
     }
     stages{
