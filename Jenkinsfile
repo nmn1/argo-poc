@@ -31,15 +31,22 @@ pipeline{
                 }
                 sh "git add ."
                 sh "git commit -m 'Update image tag to ${IMG_TAG}'"
+
                 script{
                     if (env.BRANCH_NAME == 'main') {
-                       echo 'Hello from main branch'
+                       sh "git push origin main"
                     } else {
-                        sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
+                        sh "git push origin feature "
                     }
                 }
 
             }
         }
+        stage("Sync ArgoCD"){
+            steps{
+                echo "hello argo"
+            }
+        }
+
     }
 }
