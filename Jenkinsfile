@@ -27,7 +27,7 @@ pipeline{
         stage("Update Git Manifest"){
             steps{
                 dir("./argo/my-argo-webapp/manifest"){
-                    sh -i "sed 's/image\\:.*/image\\: $IMAGE /g' app-server.yaml"
+                    sh "sed -i 's/image\\:.*/image\\: $IMAGE /g' app-server.yaml"
                 }
                 sh "git add ."
                 sh "git commit -m 'Update image tag to ${IMG_TAG}'"
