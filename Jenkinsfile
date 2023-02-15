@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment {
         IMG_TAG="V-${BUILD_NUMBER}"
-        IMAGE="naman01/web-app-berlin:${IMG_TAG}"
+        IMAGE="naman01\/web-app-berlin:${IMG_TAG}"
     }
     stages{
         stage("build"){
@@ -27,7 +27,7 @@ pipeline{
         stage("Update Git Manifest"){
             steps{
                 dir("./argo/my-argo-webapp/manifest"){
-                    sh "sed -i 's/image\\:.*/image\\: $IMAGE /g' app-server.yaml"
+                    sh "sed -i 's/image\\:.*/image\\: $IMAGE/g' app-server.yaml"
                 }
                 sh "git add ."
                 sh "git commit -m 'Update image tag to ${IMG_TAG}'"
