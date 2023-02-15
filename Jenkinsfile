@@ -2,13 +2,14 @@ pipeline{
     agent any
     environment {
         IMG_TAG="V-${BUILD_NUMBER}"
+        IMAGE="naman01/web-app-berlin:${IMG_TAG}"
     }
     stages{
         stage("build"){
            
             steps{
                 dir("./argo/my-argo-webapp"){
-                    sh "docker build -t naman01/web-app-berlin:${IMG_TAG} ."
+                    sh "docker build -t ${IMAGE} ."
                 }
             }    
         }
@@ -23,11 +24,21 @@ pipeline{
                 
             }
         }
-        stage("manifest update"){
+        stage("Update Git Manifest"){
             steps{
                 dir("./argo/my-argo-webapp/manifest"){
-                    
+                    sh -i "sed 's/image\:.*/image\: ${IMAGE} /g' app-server.yaml"
                 }
+                sh "git add ."
+                sh "git commit -m 'Update image tag to ${IMG_TAG}'"
+                script{
+                    if (env.BRANCH_NAME == 'main') {
+                       echo 'Hello from main branch'
+                    } else {
+                        sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
+                    }
+                }
+
             }
         }
     }
