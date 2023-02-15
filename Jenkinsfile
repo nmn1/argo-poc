@@ -9,7 +9,7 @@ pipeline{
            
             steps{
                 dir("./argo/my-argo-webapp"){
-                    sh "docker build -t ${IMAGE} ."
+                    sh "docker build -t naman01\\/${IMAGE} ."
                 }
             }    
         }
