@@ -23,5 +23,12 @@ pipeline{
                 
             }
         }
+        stage("manifest update"){
+            steps{
+                dir("./argo/my-argo-webapp/manifest"){
+                    
+                }
+            }
+        }
     }
 }
