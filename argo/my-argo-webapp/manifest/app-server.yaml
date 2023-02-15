@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app-server
-          image: nginx
+          image: naman01/web-app-berlin:V-18
           ports:
             - port: 80
               containerPort: 80
