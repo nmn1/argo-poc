@@ -35,15 +35,15 @@ pipeline{
                 }
                 sh "git add ."
                 sh "git commit -m 'Update image tag to ${IMG_TAG}'"
-
+                // sh "git remote add origin "
                 script{
                     if (env.BRANCH_NAME == 'main') {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
-                          sh "git push --set-upstream origin main"
+                          sh "git push -u origin main"
                         }
                     } else {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
-                          sh "git push --set-upstream origin feature"
+                          sh "git push -u origin feature"
                      }
                     }
                 }
@@ -67,6 +67,9 @@ pipeline{
     }
     post{
         success{
+            cleanWs()
+        }
+        failure{
             cleanWs()
         }
     }
