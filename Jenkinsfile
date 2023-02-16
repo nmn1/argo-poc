@@ -39,11 +39,11 @@ pipeline{
                 script{
                     if (env.BRANCH_NAME == 'main') {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
-                          sh "git push origin main"
+                          sh "git push --set-upstream origin main"
                         }
                     } else {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
-                          sh "git push origin feature"
+                          sh "git push --set-upstream origin feature"
                      }
                     }
                 }
