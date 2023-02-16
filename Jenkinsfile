@@ -1,12 +1,15 @@
 pipeline{
     agent any
+    options {
+        ansiColor('xterm')
+    }
     environment {
         IMG_TAG="V-${BUILD_NUMBER}"
         IMAGE="web-app-berlin:${IMG_TAG}"
     }
     stages{
         stage("build"){
-           
+           echo "\033[34m Starting image build... \033[0m"
             steps{
                 dir("./argo/my-argo-webapp"){
                     sh "docker build -t naman01\\/${IMAGE} ."
@@ -34,19 +37,39 @@ pipeline{
 
                 script{
                     if (env.BRANCH_NAME == 'main') {
-                       sh "git push origin main"
+                        withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
+                          sh "git push origin main"
+                        }
                     } else {
-                        sh "git push origin feature "
+                        withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
+                          sh "git push origin feature"
+                     }
                     }
                 }
-
             }
         }
-        stage("Sync ArgoCD"){
+        stage("Sync ArgoCD Status"){
             steps{
-                echo "hello argo"
+                // script{
+                //     withCredentials([usernamePassword(credentialsId: 'argo_pass', passwordVariable: 'ARGO_PASS', usernameVariable: 'ARGO_USER')]) {
+                //             sh "argocd login ${params.ARGO_URL} --name ${ARGO_USER} --password ${ARGO_PASS} --insecure"
+                //         }
+                    if(env.BRANCH_NAME == 'main'){
+                        echo "##################################################"
+                        echo "# \033[33m Sync ARGO Manually For Prod \033[33m  #"
+                        echo "##################################################"
+
+                    }else {
+                        echo "argo Feature"
+                    }
+                }
             }
         }
 
+    }
+    post{
+        success{
+            cleanWs()
+        }
     }
 }
