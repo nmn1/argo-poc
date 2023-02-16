@@ -57,12 +57,12 @@ pipeline{
                 //         }
                     if(env.BRANCH_NAME == 'main'){
                         echo "##################################################"
-                        echo "# \033[33m Sync ARGO Manually For Prod \033[33m  #"
+                        echo "# \033[33m Sync ARGO Manually For Prod \033[0m   #"
                         echo "##################################################"
 
                     }else {
                         echo "##################################################"
-                        echo "# \033[33m        AUTO ARGO SYNC       \033[33m  #"
+                        echo "# \033[33m        AUTO ARGO SYNC       \033[0m   #"
                         echo "##################################################"
                     }
                 }
