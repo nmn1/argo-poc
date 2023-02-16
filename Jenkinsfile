@@ -9,8 +9,9 @@ pipeline{
     }
     stages{
         stage("build"){
-           echo "\033[34m Starting image build... \033[0m"
+           
             steps{
+                echo "\033[34m Starting image build... \033[0m"
                 dir("./argo/my-argo-webapp"){
                     sh "docker build -t naman01\\/${IMAGE} ."
                 }
