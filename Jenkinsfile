@@ -40,11 +40,13 @@ pipeline{
                     if (env.BRANCH_NAME == 'main') {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
                           sh "git checkout -b main"
+                          sh "git pull --rebase origin main"
                           sh "git push -u origin main"
                         }
                     } else {
                         withCredentials([gitUsernamePassword(credentialsId: 'github_access', gitToolName: 'git-tool')]) {
                           sh "git checkout -b feature"
+                          sh "git pull --rebase origin feature"
                           sh "git push -u origin feature"
                      }
                     }
