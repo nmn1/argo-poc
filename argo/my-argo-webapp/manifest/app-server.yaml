@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app-server
-          image: naman01/web-app-berlin:V-4
+          image: naman01/web-app-berlin:V-71
           ports:
             - containerPort: 80
       imagePullSecrets:
