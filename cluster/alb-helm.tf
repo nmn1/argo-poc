@@ -10,12 +10,12 @@ resource "helm_release" "ingress" {
   }
 
   set {
-    name  = "autoDiscoverAwsRegion"
-    value = "true"
+    name  = "region"
+    value = var.region
   }
   set {
-    name  = "autoDiscoverAwsVpcID"
-    value = "true"
+    name  = "vpcId"
+    value = data.aws_vpcs.vpc_prebuilt.ids[0]
   }
   set {
     name  = "clusterName"

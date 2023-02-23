@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollouts-demo-ingress
+  annotations:
+    # kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-014629e7c2ead6914, subnet-0c24208d399fbb90e
+    alb.ingress.kubernetes.io/actions.root-service: |
+      {
+        "Type":"forward",
+        "ForwardConfig":{
+          "TargetGroups":[
+            {
+                "Weight":10,
+                "ServiceName":"rollouts-demo-canary",
+                "ServicePort":"80"
+            },
+            {
+                "Weight":90,
+                "ServiceName":"rollouts-demo-stable",
+                "ServicePort":"80"
+            }
+          ]
+        }
+      }
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: rollouts-demo-root
+            port: 
+              number: 80
