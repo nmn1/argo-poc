@@ -14,8 +14,21 @@ spec:
           servicePort: 80
           rootService: rollouts-demo-root
       steps:
+      - setWeight: 10
+      - pause:
+          duration: 1m
       - setWeight: 30
-      - pause: {}
+      - pause:
+          duration: 1m
+      - setWeight: 50
+      - pause:
+          duration: 1m
+      - setWeight: 70
+      - pause:
+          duration: 1m          
+      - setWeight: 100
+      - pause:
+          duration: 1m
   revisionHistoryLimit: 2
   selector:
     matchLabels:
