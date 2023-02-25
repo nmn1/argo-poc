@@ -45,10 +45,14 @@ module "eks" {
       most_recent = true
     }
     kube-proxy = {
-      most_recent = true
+      # most_recent = true
+      addon_version = "v1.24.7-eksbuild.2"
+      resolve_conflicts = "PRESERVE"
     }
     vpc-cni = {
-      most_recent = true
+      # most_recent = true
+      addon_version = "v1.11.4-eksbuild.1"
+      resolve_conflicts = "PRESERVE"
     }
     aws-ebs-csi-driver = {
       most_recent              = true
