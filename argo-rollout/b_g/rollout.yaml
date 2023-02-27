@@ -1,28 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: skiapp-rollout
-  namespace: team-riker
+  name: BG-rollout
+  namespace: app_BG
   labels:
-    app: skiapp
+    app: BG_APP
 spec:
   replicas: 3
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: skiapp
+      app: BG_APP
   template:
     metadata:
       labels:
-        app: skiapp
+        app: BG_APP
     spec:
       containers:
-      - name: skiapp
-        image: sharepointoscar/skiapp:v1
+      - name: web-server
+        image: naman01/app_blue_green:v1
         imagePullPolicy: Always
         ports:
         - name: http
-          containerPort: 8080
+          containerPort: 80
           protocol: TCP
         resources:
             requests:
@@ -30,58 +30,39 @@ spec:
                 cpu: "250m"
             limits:
                 memory: "128Mi"
-                cpu: "500m"
-      {{ if .Values.spec.karpenterInstanceProfile }}
-      nodeSelector: # <- add nodeselector, toleration and spread constraitns
-        team: default
-        type: karpenter
-      tolerations:
-        - key: 'karpenter'
-          operator: 'Exists'
-          effect: 'NoSchedule'
-      {{ end }}
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app: skiapp          
-      tolerations:
-        - key: 'karpenter'
-          operator: 'Exists'
-          effect: 'NoSchedule'                
+                cpu: "500m"                
   strategy:
     blueGreen:
       autoPromotionEnabled: false
-      activeService: skiapp-service
-      previewService: skiapp-service-preview
+      activeService: bg-service
+      previewService: bg-service-preview
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: skiapp-service-preview
-  namespace: team-riker
+  name: bg-service-preview
+  namespace: app_BG
 spec:
   ports:
-    - port: 80
-      targetPort: 8080
+    - port: 8080
+      targetPort: 80
       protocol: TCP
   type: NodePort
   selector:
-    app: skiapp
+    app: BG_APP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: skiapp-ingress-preview
-  namespace: team-riker
+  name: bg-ingress-preview
+  namespace: app_BG
   annotations:
-    alb.ingress.kubernetes.io/group.name: riker-preview
+    alb.ingress.kubernetes.io/group.name: web
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-014629e7c2ead6914, subnet-0c24208d399fbb90e
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=Riker'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 8080}]'
+    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=Berlin'
 spec:
   ingressClassName: alb
   rules:
@@ -92,6 +73,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: skiapp-service-preview
+            name: bg-service-preview
             port:
-              number: 80
+              number: 8080
