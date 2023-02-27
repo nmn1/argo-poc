@@ -23,12 +23,13 @@ data "aws_subnets" "public_subnets_default" {
   }
 }
 
+################################################################
+
 
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
-  # version = "19.4.2"
-  version = "18.30.3"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 19.0"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
@@ -38,7 +39,6 @@ module "eks" {
   vpc_id                         = data.aws_vpcs.vpc_prebuilt.ids[0]
   subnet_ids                     = data.aws_subnets.private_subnets_default.ids
   control_plane_subnet_ids       = concat(data.aws_subnets.private_subnets_default.ids, data.aws_subnets.public_subnets_default.ids)
-
 
   cluster_addons = {
     coredns = {
@@ -57,38 +57,58 @@ module "eks" {
   }
 
 
-  #   eks_managed_node_group_defaults = {
-  #     instance_types = "t3.nano"
-  #     disk_size = 50
-
-  #   }
+  # EKS Managed Node Group(s)
 
   eks_managed_node_groups = {
     first = {
       min_size     = 1
-      max_size     = 2
+      max_size     = 4
       desired_size = 2
 
       instance_types = ["t3.large"]
       capacity_type  = "ON_DEMAND"
     }
   }
-  node_security_group_additional_rules = {
-    ingress_allow_access_from_control_plane = {
-      type                          = "ingress"
-      protocol                      = "tcp"
-      from_port                     = 9443
-      to_port                       = 9443
-      source_cluster_security_group = true
-      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
-    }
+
+
+  # aws-auth configmap
+#   manage_aws_auth_configmap = true
+
+  #   aws_auth_roles = [
+  #     {
+  #       rolearn  = "arn:aws:iam::66666666666:role/role1"
+  #       username = "role1"
+  #       groups   = ["system:masters"]
+  #     },
+  #   ]
+
+  #   aws_auth_users = [
+  #     {
+  #       userarn  = "arn:aws:iam::66666666666:user/user1"
+  #       username = "user1"
+  #       groups   = ["system:masters"]
+  #     },
+  #     {
+  #       userarn  = "arn:aws:iam::66666666666:user/user2"
+  #       username = "user2"
+  #       groups   = ["system:masters"]
+  #     },
+  #   ]
+
+  #   aws_auth_accounts = [
+  #     "777777777777",
+  #     "888888888888",
+  #   ]
+
+  tags = {
+    Environment = "dev"
+    Terraform   = "true"
   }
 }
 
-
 resource "null_resource" "update_kubeconfig" {
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name ${module.eks.cluster_id} --region ${var.region} --profile nagarro_eks"
+    command = "aws eks update-kubeconfig --name ${var.cluster_name} --region ${var.region} --profile ${var.aws_profile}"
   }
 
   depends_on = [module.eks]

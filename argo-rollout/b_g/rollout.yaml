@@ -1,0 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: BG-rollout
+  namespace: app_BG
+  labels:
+    app: BG_APP
+spec:
+  replicas: 3
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: BG_APP
+  template:
+    metadata:
+      labels:
+        app: BG_APP
+    spec:
+      containers:
+      - name: web-server
+        image: naman01/app_blue_green:v1
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        resources:
+            requests:
+                memory: "64Mi"
+                cpu: "250m"
+            limits:
+                memory: "128Mi"
+                cpu: "500m"                
+  strategy:
+    blueGreen:
+      autoPromotionEnabled: false
+      activeService: bg-service
+      previewService: bg-service-preview
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bg-service-preview
+  namespace: app_BG
+spec:
+  ports:
+    - port: 8080
+      targetPort: 80
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: BG_APP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bg-ingress-preview
+  namespace: app_BG
+  annotations:
+    alb.ingress.kubernetes.io/group.name: web
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-014629e7c2ead6914, subnet-0c24208d399fbb90e
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 8080}]'
+    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=Berlin'
+spec:
+  ingressClassName: alb
+  rules:
+  - host: 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bg-service-preview
+            port:
+              number: 8080
