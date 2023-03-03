@@ -56,13 +56,14 @@ pipeline{
         stage("Sync ArgoCD Status"){
             steps{
                 script{
-                //     withCredentials([usernamePassword(credentialsId: 'argo_pass', passwordVariable: 'ARGO_PASS', usernameVariable: 'ARGO_USER')]) {
-                //             sh "argocd login ${params.ARGO_URL} --name ${ARGO_USER} --password ${ARGO_PASS} --insecure"
-                //         }
+                    withCredentials([usernamePassword(credentialsId: 'argo_pass', passwordVariable: 'ARGO_PASS', usernameVariable: 'ARGO_USER')]) {
+                            sh "argocd login localhost:8085 --name ${ARGO_USER} --password ${ARGO_PASS} --insecure"
+                        }
                     if(env.BRANCH_NAME == 'main'){
                         echo "# \033[33m [Sync ARGO Manually For Prod] \033[0m   #"
                     }else {
                         echo "# \033[33m   [     AUTO ARGO SYNC   ]     \033[0m #"
+
                     }
                 }
             }

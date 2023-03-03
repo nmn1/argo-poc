@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: bg-ingress
-  namespace: app_BG
+  namespace: app_bg
   annotations:
     alb.ingress.kubernetes.io/group.name: web
     alb.ingress.kubernetes.io/scheme: internet-facing

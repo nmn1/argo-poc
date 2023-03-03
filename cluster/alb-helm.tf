@@ -3,9 +3,9 @@ resource "helm_release" "ingress" {
   chart      = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   version    = "1.4.6"
-  namespace   = "kube-system"
+  namespace  = "kube-system"
 
- 
+
   set {
     name  = "serviceAccount.create"
     value = false
@@ -25,7 +25,7 @@ resource "helm_release" "ingress" {
   }
   set {
     name  = "vpcId"
-    value = data.aws_vpcs.vpc_prebuilt.ids[0]
+    value = module.vpc.vpc_id
   }
   set {
     name  = "clusterName"

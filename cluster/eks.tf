@@ -1,27 +1,27 @@
-data "aws_vpcs" "vpc_prebuilt" {
-  tags = {
-    Name = "poc-vpc"
-  }
-}
+# data "aws_vpcs" "vpc_prebuilt" {
+#   tags = {
+#     Name = "poc-vpc"
+#   }
+# }
 
-data "aws_subnets" "private_subnets_default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpcs.vpc_prebuilt.ids[0]]
-  }
-  tags = {
-    Facing = "private"
-  }
-}
-data "aws_subnets" "public_subnets_default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpcs.vpc_prebuilt.ids[0]]
-  }
-  tags = {
-    Facing = "public"
-  }
-}
+# data "aws_subnets" "private_subnets_default" {
+#   filter {
+#     name   = "vpc-id"
+#     values = [data.aws_vpcs.vpc_prebuilt.ids[0]]
+#   }
+#   tags = {
+#     Facing = "private"
+#   }
+# }
+# data "aws_subnets" "public_subnets_default" {
+#   filter {
+#     name   = "vpc-id"
+#     values = [data.aws_vpcs.vpc_prebuilt.ids[0]]
+#   }
+#   tags = {
+#     Facing = "public"
+#   }
+# }
 
 ################################################################
 
@@ -36,10 +36,9 @@ module "eks" {
 
   cluster_endpoint_public_access = true
   enable_irsa                    = true
-  vpc_id                         = data.aws_vpcs.vpc_prebuilt.ids[0]
-  subnet_ids                     = data.aws_subnets.private_subnets_default.ids
-  control_plane_subnet_ids       = concat(data.aws_subnets.private_subnets_default.ids, data.aws_subnets.public_subnets_default.ids)
-
+  vpc_id                         = module.vpc.vpc_id
+  subnet_ids                     = module.vpc.private_subnets
+  control_plane_subnet_ids       = concat(module.vpc.private_subnets, module.vpc.public_subnets)
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -60,7 +59,7 @@ module "eks" {
   # EKS Managed Node Group(s)
 
   eks_managed_node_groups = {
-    first = {
+    blue = {
       min_size     = 1
       max_size     = 4
       desired_size = 2
@@ -68,11 +67,11 @@ module "eks" {
       instance_types = ["t3.large"]
       capacity_type  = "ON_DEMAND"
     }
-  }
+  }  
 
 
   # aws-auth configmap
-#   manage_aws_auth_configmap = true
+    # manage_aws_auth_configmap = true
 
   #   aws_auth_roles = [
   #     {

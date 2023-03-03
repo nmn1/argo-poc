@@ -1,3 +1,18 @@
+variable "vpc_name" {
+  type        = string
+  description = "vpc name"
+  default     = "berlin-vpc-01"
+}
+variable "vpc_cidr" {
+  type        = string
+  description = "CIDR block for VPC"
+  default     = "10.0.0.0/24"
+}
+
+
+
+
+
 variable "cluster_name" {
   type        = string
   description = "EKS cluster name"
