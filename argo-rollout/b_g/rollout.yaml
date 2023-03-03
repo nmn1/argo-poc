@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: BG-rollout
-  namespace: app_bg
+  namespace: app-bg
   labels:
     app: BG_APP
 spec:
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bg-service-preview
-  namespace: app_bg
+  namespace: app-bg
 spec:
   ports:
     - port: 8080
@@ -55,7 +55,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: bg-ingress-preview
-  namespace: app_bg
+  namespace: app-bg
   annotations:
     alb.ingress.kubernetes.io/group.name: web
     alb.ingress.kubernetes.io/scheme: internet-facing

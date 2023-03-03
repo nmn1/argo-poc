@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bg-service
-  namespace: app_bg
+  namespace: app-bg
 spec:
   ports:
     - port: 80
