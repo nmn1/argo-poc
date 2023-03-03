@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: BG-rollout
+  name: bg-rollout
   namespace: app-bg
   labels:
     app: BG_APP
