@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: web-server
-        image: naman01/app_blue_green:v1
+        image: naman01/app_blue_green:v2
         imagePullPolicy: Always
         ports:
         - name: http
