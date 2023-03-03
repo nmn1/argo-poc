@@ -6,7 +6,6 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/group.name: web
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: subnet-014629e7c2ead6914, subnet-0c24208d399fbb90e
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     #alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
