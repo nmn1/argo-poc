@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: bg-service
   namespace: app-bg
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /index.html
 spec:
   ports:
     - port: 80

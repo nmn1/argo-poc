@@ -1,3 +1,5 @@
+aws eks update-kubeconfig --name Berlin-eks-cluster --region us-east-1 --profile nagarro_eks
+
 Install -  ArgoCD
     kubectl create namespace argocd
     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
@@ -7,4 +9,7 @@ Install - Argo Rollout
     kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 
 Rollout Dashboard
-    kubectl argo  rollouts dashboard    
+    kubectl argo  rollouts dashboard   
+
+argocd login localhost:8085 --name --password
+
