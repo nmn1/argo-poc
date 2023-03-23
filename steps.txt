@@ -13,3 +13,9 @@ Rollout Dashboard
 
 argocd login localhost:8085 --name --password
 
+
+git pull --rebase origin feature
+
+
+-----------------------
+aws eks update-kubeconfig --name Berlin-eks-cluster --region us-east-1 --profile nagarro_eks
