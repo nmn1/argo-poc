@@ -15,8 +15,7 @@ spec:
           rootService: rollouts-demo-root
       steps:
       - setWeight: 10
-      - pause:
-          duration: 1m
+      - pause: {}
       - setWeight: 30
       - pause:
           duration: 1m
@@ -40,7 +39,7 @@ spec:
     spec:
       containers:
       - name: rollouts-demo
-        image: argoproj/rollouts-demo:yellow
+        image: argoproj/rollouts-demo:blue
         ports:
         - name: http
           containerPort: 8080
