@@ -5,24 +5,6 @@ metadata:
   annotations:
     # kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/actions.root-service: |
-      {
-        "Type":"forward",
-        "ForwardConfig":{
-          "TargetGroups":[
-            {
-                "Weight":10,
-                "ServiceName":"rollouts-demo-canary",
-                "ServicePort":"80"
-            },
-            {
-                "Weight":90,
-                "ServiceName":"rollouts-demo-stable",
-                "ServicePort":"80"
-            }
-          ]
-        }
-      }
 spec:
   ingressClassName: alb
   rules:
